@@ -14,13 +14,28 @@
         throw new Error('Could not find element with selector: ' + selector);
       }
     }
+
+    CheckList.prototype.addClickHandler = function (fn) {
+      this.$element.on('click', 'input', function (event) {
+        var email = event.target.value;
+        this.removeRow(email);
+        fn(email);
+      }.bind(this));
+    };
     
     CheckList.prototype.addRow = function (coffeeOrder) {
-        // Create a new instance of a row, using the coffee order info
+        this.removeRow(coffeeOrder.emailAddress);
+
         var rowElement = new Row(coffeeOrder);
     
-        // Add the new row instance's $element property to the checklist
         this.$element.append(rowElement.$element);
+      };
+
+      CheckList.prototype.removeRow = function (email) {
+        this.$element
+        .find('[value="' + email + '"]')
+        .closest('[data-coffee-order="checkbox"]')
+        .remove();
       };
     
   function Row(coffeeOrder) {
